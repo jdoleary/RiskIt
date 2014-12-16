@@ -13,13 +13,33 @@
 
     <!-- Bootstrap core CSS -->
     <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/component.css" />
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+        .risk_success {
+            background: #17aa56;
+            box-shadow: 0 6px #119e4d;
+        }
+        .risk_fail {
+            background: #cb4e4e;
+            box-shadow: 0 6px #ab3c3c;
+        }
+        .risk_fail:hover {
+            box-shadow: 0 8px #ab3c3c;
+            top: -2px;
+        }
 
+        .risk_fail:active {
+            box-shadow: 0 0 #ab3c3c;
+            top: 6px;
+        }
+    </style>
   </head>
 
   <body>
-
+    <img id="unmuted" src="images/volume_up.png" style="position: absolute; right:10px; top: 10px;" width="32" height="32" onclick=mute();></img>
+    <img id="muted" src="images/mute.png" style="display:none; position: absolute; right:10px; top: 10px;" width="32" height="32" onclick=unmute();></img>
     <div class="container">
       <div class="header">
         <nav>
@@ -36,8 +56,8 @@
         <h1 id="money" style="font-family: Arial, Helvetica, sans-serif;"></h1>
         <span id="countdown" class="timer"></span>
         <p id="stats"></p>
-        <p id="btn_risk"><a class="btn btn-lg btn-success" href="#" role="button" onclick="riskIt();">Risk It!</a></p>
-        <p id="btn_upgrade"><a class="btn btn-lg btn-success" href="#" role="button" onclick="upgradeIncome();">Upgrade Income</a></p>
+        <p><a id="btn_risk" class="btn btn-7 btn-2d btn-7h" href="#" role="button" onclick="riskIt();">Risk It!</a></p>
+        <p id="btn_upgrade"><a class="btn btn-7 btn-7h" href="#" role="button" onclick="upgradeIncome();">Upgrade Income</a></p>
       </div>
       <p>Music: "Rollin at 5" Kevin MacLeod (incompetech.com) 
 Licensed under Creative Commons: By Attribution 3.0
@@ -46,6 +66,7 @@ http://creativecommons.org/licenses/by/3.0/</p>
 
     </div> <!-- /container -->
     <script>
+        var seconds = 120;//game timer
         var riskSuccess = 0;
         
         var riskStreak = 0;
@@ -75,6 +96,9 @@ http://creativecommons.org/licenses/by/3.0/</p>
                 if(risksInRow > 1){
                     var index = risksInRow-1;
                     if(index < fx_exclaim.length){
+                        for(var i = 0; i < index; i++){
+                            fx_exclaim[i].pause();//stop the other sound effects
+                        }
                         play_sound(fx_exclaim[index]);
                     }
                 }
@@ -85,7 +109,12 @@ http://creativecommons.org/licenses/by/3.0/</p>
                 riskFailure++;
                 risksInRow = 0;
                 play_rand_sound(fxs_bad);
+                //make the button shake:
+                $('#btn_risk').addClass('btn-error');
+                $('#btn_risk').addClass('risk_fail');
+                setTimeout( function() { $('#btn_risk').removeClass('btn-error'); $('#btn_risk').removeClass('risk_fail');}, 600 );
             }
+            calculatePotential();
             updateStats();
         }
         function getIncome(){
@@ -96,19 +125,24 @@ http://creativecommons.org/licenses/by/3.0/</p>
             if(money >= upgradeIncomeCost){
                 money-=upgradeIncomeCost;
                 income *= 2;
+                calculatePotential();
             }
             updateStats();
         }
+        var potentialMoney = 0;
+        function calculatePotential(){
+            potentialMoney = Math.round(money+income*seconds*music_bpm/60);
+        }
         function updateStats(){
             upgradeIncomeCost = income*60;
-            $('#stats').html("Risk Success: " + riskSuccess + "<br>Risk Failure: " + riskFailure + "<br>Best Success Streak: " + riskStreak + "<br>Upgrade Income Cost: " + upgradeIncomeCost);
+            $('#stats').html("Risk Success: " + riskSuccess + "<br>Risk Failure: " + riskFailure + "<br>Best Success Streak: " + riskStreak + "<br>Potential: ~$" + potentialMoney + "<br>Upgrade Income Cost: " + upgradeIncomeCost);
             var money_formatted = money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
             
             var streak_multiplier_count = risksInRow > 1 ? "x" + risksInRow : "";
             id_money.text("$" + money_formatted + " " + streak_multiplier_count);
         }
         var music_bpm = 210;
-        var music_bps = 1000/(210/60);//beats per second
+        var music_bps = 1000/(210/60);//interval timer
         var income_interval = setInterval(function(){ getIncome(); }, music_bps);
         function gameOver(){
             $('#stats').hide();
@@ -121,6 +155,7 @@ http://creativecommons.org/licenses/by/3.0/</p>
         
         //audio:
         
+        //WHEN YOU ADD NEW MUSIC, ADD IT TO readjustVolume()!!!
         var music = new Audio("Rollinat5.mp3");
         music.play();
         var fxs_good = [new Audio("good_1.wav"),new Audio("good_2.wav")];
@@ -135,9 +170,30 @@ http://creativecommons.org/licenses/by/3.0/</p>
             if (window.chrome) sound.load()
             sound.play()
         }
+        function mute(){
+            $('#unmuted').hide();
+            $('#muted').show();
+            readjustVolumes(0.0);
+        }
+        function unmute(){
+            $('#unmuted').show();
+            $('#muted').hide();
+            readjustVolumes(1.0);
+        }
+        function readjustVolumes(newVolume){
+            changeVolume(music,newVolume);
+            for(var i = 0; i < fxs_good.length; i++)changeVolume(fxs_good[i],newVolume);
+            for(var i = 0; i < fxs_bad.length; i++)changeVolume(fxs_bad[i],newVolume);
+            for(var i = 0; i < fx_exclaim.length; i++)changeVolume(fx_exclaim[i],newVolume);
+        }
+            
+        
+        var volume_master = 1.0;
+        function changeVolume(clip,newVolume){
+            clip.volume = newVolume*volume_master;
+        }
     </script>
     <script>
-    var seconds = 120;
     function secondPassed() {
         var minutes = Math.round((seconds - 30)/60);
         var remainingSeconds = seconds % 60;
@@ -151,9 +207,12 @@ http://creativecommons.org/licenses/by/3.0/</p>
         } else {
             seconds--;
         }
+        
     }
      
     var countdownTimer = setInterval('secondPassed()', 1000);
+    
+    calculatePotential();
     </script>
 
   </body>
