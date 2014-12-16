@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Risk It!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="#"></a></li>
+            <li role="presentation"><a href="#"></a></li>
+            <li role="presentation"><a href="#"></a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted"></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1 id="money" style="font-family: Arial, Helvetica, sans-serif;"></h1>
+        <span id="countdown" class="timer"></span>
+        <p id="stats"></p>
+        <p id="btn_risk"><a class="btn btn-lg btn-success" href="#" role="button" onclick="riskIt();">Risk It!</a></p>
+        <p id="btn_upgrade"><a class="btn btn-lg btn-success" href="#" role="button" onclick="upgradeIncome();">Upgrade Income</a></p>
+      </div>
+      <p>Music: "Rollin at 5" Kevin MacLeod (incompetech.com) 
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/</p>
+
+
+    </div> <!-- /container -->
+    <script>
+        var riskSuccess = 0;
+        
+        var riskStreak = 0;
+        var risksInRow = 0;
+        
+        var riskFailure = 0;
+        var upgradeIncomeCost = 0;
+        var income = 1;
+        var money = 100;
+        
+        var id_money = $('#money');
+        
+        updateStats();
+        var chance = 0.5;
+        
+        function riskIt(){
+            var roll = Math.random();
+            console.log('roll: ' + roll);
+            if(roll<=chance){
+                money*=2;
+                updateStats();
+                riskSuccess++;
+                risksInRow++;
+                if(risksInRow >= riskStreak)riskStreak = risksInRow;
+                play_rand_sound(fxs_good);
+                
+                if(risksInRow > 1){
+                    var index = risksInRow-1;
+                    if(index < fx_exclaim.length){
+                        play_sound(fx_exclaim[index]);
+                    }
+                }
+                
+            }else{
+                money = 0;
+                updateStats();
+                riskFailure++;
+                risksInRow = 0;
+                play_rand_sound(fxs_bad);
+            }
+            updateStats();
+        }
+        function getIncome(){
+            money += income;
+            updateStats();
+        }
+        function upgradeIncome(){
+            if(money >= upgradeIncomeCost){
+                money-=upgradeIncomeCost;
+                income *= 2;
+            }
+            updateStats();
+        }
+        function updateStats(){
+            upgradeIncomeCost = income*60;
+            $('#stats').html("Risk Success: " + riskSuccess + "<br>Risk Failure: " + riskFailure + "<br>Best Success Streak: " + riskStreak + "<br>Upgrade Income Cost: " + upgradeIncomeCost);
+            var money_formatted = money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+            
+            var streak_multiplier_count = risksInRow > 1 ? "x" + risksInRow : "";
+            id_money.text("$" + money_formatted + " " + streak_multiplier_count);
+        }
+        var music_bpm = 210;
+        var music_bps = 1000/(210/60);//beats per second
+        var income_interval = setInterval(function(){ getIncome(); }, music_bps);
+        function gameOver(){
+            $('#stats').hide();
+            $('#btn_risk').hide();
+            $('#btn_upgrade').hide();
+            clearInterval(income_interval);
+            $('#countdown').text("Game Over");
+            
+        }
+        
+        //audio:
+        
+        var music = new Audio("Rollinat5.mp3");
+        music.play();
+        var fxs_good = [new Audio("good_1.wav"),new Audio("good_2.wav")];
+        var fxs_bad = [new Audio("bad_1.wav"),new Audio("bad_2.wav"),new Audio("bad_3.wav")];
+        var fx_exclaim = [new Audio("exclaim_1.wav"),new Audio("exclaim_2.wav"),new Audio("exclaim_3.wav"),new Audio("exclaim_4.wav"),new Audio("exclaim_5.wav")];
+        function play_rand_sound(sound_list){
+            var rand = sound_list[Math.floor(Math.random() * sound_list.length)];
+            play_sound(rand);
+        }
+        function play_sound(sound){
+            //chrome / firefox discrepancy:
+            if (window.chrome) sound.load()
+            sound.play()
+        }
+    </script>
+    <script>
+    var seconds = 120;
+    function secondPassed() {
+        var minutes = Math.round((seconds - 30)/60);
+        var remainingSeconds = seconds % 60;
+        if (remainingSeconds < 10) {
+            remainingSeconds = "0" + remainingSeconds;  
+        }
+        document.getElementById('countdown').innerHTML = "Time remaining: " + minutes + ":" + remainingSeconds;
+        if (seconds == 0) {
+            clearInterval(countdownTimer);
+            gameOver();
+        } else {
+            seconds--;
+        }
+    }
+     
+    var countdownTimer = setInterval('secondPassed()', 1000);
+    </script>
+
+  </body>
+</html>
