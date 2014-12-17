@@ -36,6 +36,19 @@
             top: 6px;
         }
         
+        .upgrade_unavail {
+            background: #999999;
+            box-shadow: 0 6px #7a7a7a;
+        }
+        .upgrade_unavail:hover {
+            box-shadow: 0 8px #7a7a7a;
+            top: -2px;
+        }
+
+        .upgrade_unavail:active {
+            box-shadow: 0 0 #7a7a7a;
+            top: 6px;
+        }
         div.total_centered{
             margin: 0;
             //background: yellow;
@@ -104,8 +117,10 @@ http://creativecommons.org/licenses/by/3.0/</p>
         var risksInRow = 0;
         
         var riskFailure = 0;
-        var upgradeIncomeCost = 0;
         var income = 1;
+        
+        var upgradeIncomeCost = income*60;
+        $('#btn_upgrade a').text("UPGRADE INCOME: " + upgradeIncomeCost);
         var money = 100;
         
         var id_money = $('#money');
@@ -132,13 +147,21 @@ http://creativecommons.org/licenses/by/3.0/</p>
                         }
                         play_sound(fx_exclaim[index]);
                     }
-                    //show flashy multiplier
-                    showMultiplier(risksInRow);
                 }
+                //show flashy multiplier
+                showMultiplier(risksInRow);
                 
                 
             }else{
                 //Fail riskit
+                if(money >= 100000){
+                    play_sound(fxs_money_loss[2]);
+                }else if(money >= 10000){
+                    play_sound(fxs_money_loss[1]);
+                }else if (money >= 1000){
+                    play_sound(fxs_money_loss[0]);
+                
+                }
                 money = 0;
                 updateStats();
                 riskFailure++;
@@ -160,9 +183,12 @@ http://creativecommons.org/licenses/by/3.0/</p>
         }
         function upgradeIncome(){
             if(money >= upgradeIncomeCost){
+                play_rand_sound(fxs_upgrade);
                 money-=upgradeIncomeCost;
                 income *= 2;
                 calculatePotential();
+                upgradeIncomeCost = income*60;
+                $('#btn_upgrade a').text("UPGRADE INCOME: " + upgradeIncomeCost);
             }
             updateStats();
         }
@@ -171,10 +197,17 @@ http://creativecommons.org/licenses/by/3.0/</p>
             potentialMoney = Math.round(money+income*seconds*music_bpm/60);
         }
         function updateStats(){
-            upgradeIncomeCost = income*60;
-            $('#stats').html("Risk Success: " + riskSuccess + "<br>Risk Failure: " + riskFailure + "<br>Best Success Streak: " + riskStreak + "<br>Potential: ~$" + potentialMoney + "<br>Upgrade Income Cost: " + upgradeIncomeCost);
+            $('#stats').html("History S/F: " + riskSuccess + "/" + riskFailure + "<br>Best Success Streak: " + riskStreak + "<br>Potential: ~$" + potentialMoney);
             var money_formatted = money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
             $('#money').text("$"+money_formatted);
+            
+            //upgrade button:
+            
+            $('#btn_upgrade a').addClass('upgrade_unavail');
+            
+            if(money >= upgradeIncomeCost){
+                $('#btn_upgrade a').removeClass('upgrade_unavail');
+            }
             
         }
         var music_bpm = 210;
@@ -196,14 +229,16 @@ http://creativecommons.org/licenses/by/3.0/</p>
         var choice = Math.floor(Math.random()*7);
         console.log("music choice: " + choice);
         if(choice < 5){
-            music = new Audio("Rollinat5.mp3");
+            music = new Audio("sound/Rollinat5.mp3");
         }else{
-            music = new Audio("Rollinat5elec.mp3");
+            music = new Audio("sound/Rollinat5elec.mp3");
         }
         music.play();
-        var fxs_good = [new Audio("good_1.wav"),new Audio("good_2.wav")];
-        var fxs_bad = [new Audio("bad_1.wav"),new Audio("bad_2.wav"),new Audio("bad_3.wav")];
-        var fx_exclaim = [new Audio("exclaim_1.wav"),new Audio("exclaim_2.wav"),new Audio("exclaim_3.wav"),new Audio("exclaim_4.wav"),new Audio("exclaim_5.wav"),new Audio("exclaim_6.wav")];
+        var fxs_good = [new Audio("sound/good_1.wav"),new Audio("sound/good_2.wav")];
+        var fxs_bad = [new Audio("sound/bad_1.wav"),new Audio("sound/bad_2.wav"),new Audio("sound/bad_3.wav")];
+        var fxs_upgrade = [new Audio("sound/upgrade_1.wav"),new Audio("sound/upgrade_2.wav")];
+        var fx_exclaim = [new Audio("sound/exclaim_1.wav"),new Audio("sound/exclaim_2.wav"),new Audio("sound/exclaim_3.wav"),new Audio("sound/exclaim_4.wav"),new Audio("sound/exclaim_5.wav"),new Audio("sound/exclaim_6.wav"),new Audio("sound/exclaim_7.wav")];
+        var fxs_money_loss = [new Audio("sound/bad_amount_1.wav"),new Audio("sound/bad_amount_2.wav"),new Audio("sound/bad_amount_3.wav")];
         function play_rand_sound(sound_list){
             var rand = sound_list[Math.floor(Math.random() * sound_list.length)];
             play_sound(rand);
@@ -269,7 +304,7 @@ http://creativecommons.org/licenses/by/3.0/</p>
     };
     function showMultiplier(i){
         var choice = Math.floor(Math.random()*2);
-        $('#animationSandbox span').text('x' + i);
+        $('#animationSandbox span').text('x' + 2*i);
         if(choice == 0)animate_css('jpulse');
         else animate_css('jpulse2');
     }
