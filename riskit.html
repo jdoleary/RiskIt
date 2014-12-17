@@ -14,6 +14,7 @@
     <!-- Bootstrap core CSS -->
     <link href="dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="css/component.css" />
+    <link rel="stylesheet" type="text/css" href="css/animate.css" />
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <style>
@@ -33,6 +34,34 @@
         .risk_fail:active {
             box-shadow: 0 0 #ab3c3c;
             top: 6px;
+        }
+        
+        div.total_centered{
+            margin: 0;
+            //background: yellow;
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%); 
+            font-size: 5em;
+        }
+        #animationSandbox span{
+            color: #f35626;
+            background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-animation: hue 5s infinite linear;
+        }
+
+        @-webkit-keyframes hue {
+            from {
+              -webkit-filter: hue-rotate(0deg);
+            }
+            
+            to {
+              -webkit-filter: hue-rotate(360deg);
+            }
         }
     </style>
   </head>
@@ -54,11 +83,13 @@
 
       <div class="jumbotron">
         <h1 id="money" style="font-family: Arial, Helvetica, sans-serif;"></h1>
+        
         <span id="countdown" class="timer"></span>
         <p id="stats"></p>
         <p><a id="btn_risk" class="btn btn-7 btn-2d btn-7h" href="#" role="button" onclick="riskIt();">Risk It!</a></p>
         <p id="btn_upgrade"><a class="btn btn-7 btn-7h" href="#" role="button" onclick="upgradeIncome();">Upgrade Income</a></p>
       </div>
+        <div class="total_centered"><div id="animationSandbox" style="opacity:0;"><span>Flashy Multiplier</span></div></div>
       <p>Music: "Rollin at 5" Kevin MacLeod (incompetech.com) 
 Licensed under Creative Commons: By Attribution 3.0
 http://creativecommons.org/licenses/by/3.0/</p>
@@ -80,7 +111,7 @@ http://creativecommons.org/licenses/by/3.0/</p>
         var id_money = $('#money');
         
         updateStats();
-        var chance = 0.5;
+        var chance = 0.6;
         
         function riskIt(){
             var roll = Math.random();
@@ -101,9 +132,13 @@ http://creativecommons.org/licenses/by/3.0/</p>
                         }
                         play_sound(fx_exclaim[index]);
                     }
+                    //show flashy multiplier
+                    showMultiplier(risksInRow);
                 }
                 
+                
             }else{
+                //Fail riskit
                 money = 0;
                 updateStats();
                 riskFailure++;
@@ -113,6 +148,8 @@ http://creativecommons.org/licenses/by/3.0/</p>
                 $('#btn_risk').addClass('btn-error');
                 $('#btn_risk').addClass('risk_fail');
                 setTimeout( function() { $('#btn_risk').removeClass('btn-error'); $('#btn_risk').removeClass('risk_fail');}, 600 );
+                //hide multiplier
+                $('#animationSandbox').removeClass();
             }
             calculatePotential();
             updateStats();
@@ -137,9 +174,8 @@ http://creativecommons.org/licenses/by/3.0/</p>
             upgradeIncomeCost = income*60;
             $('#stats').html("Risk Success: " + riskSuccess + "<br>Risk Failure: " + riskFailure + "<br>Best Success Streak: " + riskStreak + "<br>Potential: ~$" + potentialMoney + "<br>Upgrade Income Cost: " + upgradeIncomeCost);
             var money_formatted = money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+            $('#money').text("$"+money_formatted);
             
-            var streak_multiplier_count = risksInRow > 1 ? "x" + risksInRow : "";
-            id_money.text("$" + money_formatted + " " + streak_multiplier_count);
         }
         var music_bpm = 210;
         var music_bps = 1000/(210/60);//interval timer
@@ -156,11 +192,18 @@ http://creativecommons.org/licenses/by/3.0/</p>
         //audio:
         
         //WHEN YOU ADD NEW MUSIC, ADD IT TO readjustVolume()!!!
-        var music = new Audio("Rollinat5.mp3");
+        var music;
+        var choice = Math.floor(Math.random()*7);
+        console.log("music choice: " + choice);
+        if(choice < 5){
+            music = new Audio("Rollinat5.mp3");
+        }else{
+            music = new Audio("Rollinat5elec.mp3");
+        }
         music.play();
         var fxs_good = [new Audio("good_1.wav"),new Audio("good_2.wav")];
         var fxs_bad = [new Audio("bad_1.wav"),new Audio("bad_2.wav"),new Audio("bad_3.wav")];
-        var fx_exclaim = [new Audio("exclaim_1.wav"),new Audio("exclaim_2.wav"),new Audio("exclaim_3.wav"),new Audio("exclaim_4.wav"),new Audio("exclaim_5.wav")];
+        var fx_exclaim = [new Audio("exclaim_1.wav"),new Audio("exclaim_2.wav"),new Audio("exclaim_3.wav"),new Audio("exclaim_4.wav"),new Audio("exclaim_5.wav"),new Audio("exclaim_6.wav")];
         function play_rand_sound(sound_list){
             var rand = sound_list[Math.floor(Math.random() * sound_list.length)];
             play_sound(rand);
@@ -213,6 +256,23 @@ http://creativecommons.org/licenses/by/3.0/</p>
     var countdownTimer = setInterval('secondPassed()', 1000);
     
     calculatePotential();
+    
+    
+    function animate_css(x) {
+        //clear previous animations:
+        $("#animationSandbox").removeClass();
+        //show it suddenly
+        $('#animationSandbox span').show();
+        
+        
+        $('#animationSandbox').addClass(x + ' animated');
+    };
+    function showMultiplier(i){
+        var choice = Math.floor(Math.random()*2);
+        $('#animationSandbox span').text('x' + i);
+        if(choice == 0)animate_css('jpulse');
+        else animate_css('jpulse2');
+    }
     </script>
 
   </body>
