@@ -18,6 +18,15 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <style>
+        *{
+            -webkit-touch-callout:none;
+            -webkit-user-select:none;
+            -khtml-user-select:none;
+            -moz-user-select:none;
+            -ms-user-select:none;
+            user-select:none;
+            -webkit-tap-highlight-color:rgba(0,0,0,0);
+        }
         .risk_success {
             background: #17aa56;
             box-shadow: 0 6px #119e4d;
@@ -76,6 +85,13 @@
               -webkit-filter: hue-rotate(360deg);
             }
         }
+        #stats{
+            display:none;
+        }
+        .avoid-clicks {
+          pointer-events: none;
+        }
+        
     </style>
   </head>
 
@@ -99,10 +115,10 @@
         
         <span id="countdown" class="timer"></span>
         <p id="stats"></p>
-        <p><a id="btn_risk" class="btn btn-7 btn-2d btn-7h" href="#" role="button" onclick="riskIt();">Risk It!</a></p>
-        <p id="btn_upgrade"><a class="btn btn-7 btn-7h" href="#" role="button" onclick="upgradeIncome();">Upgrade Income</a></p>
+        <p id="btn_risk_holder"><a id="btn_risk" class="btn btn-7 btn-2d btn-7h" href="#" role="button">Risk It!</a></p>
+        <p id="btn_upgrade"><a class="btn btn-7 btn-7h" href="#" role="button">Upgrade Income</a></p>
       </div>
-        <div class="total_centered"><div id="animationSandbox" style="opacity:0;"><span>Flashy Multiplier</span></div></div>
+        <div class="total_centered avoid-clicks"><div id="animationSandbox" style="opacity:0;"><span>Flashy Multiplier</span></div></div>
       <p>Music: "Rollin at 5" Kevin MacLeod (incompetech.com) 
 Licensed under Creative Commons: By Attribution 3.0
 http://creativecommons.org/licenses/by/3.0/</p>
@@ -110,6 +126,34 @@ http://creativecommons.org/licenses/by/3.0/</p>
 
     </div> <!-- /container -->
     <script>
+        /*
+         Add handlers to buttons:
+        */
+        var disableClicks = false;
+        function addClickAndTouch(id,callback){
+            document.getElementById(id).addEventListener('click', function(e){
+                if(!disableClicks){
+                    callback(e);
+                }
+            });
+            document.getElementById(id).addEventListener('touchstart', function(e){
+                disableClicks = true;
+                callback(e);
+            });
+        }
+        addClickAndTouch('btn_risk_holder',function(e){
+            riskIt();
+            e.preventDefault();
+        });
+        addClickAndTouch('btn_upgrade',function(e){
+            upgradeIncome();
+            e.preventDefault();
+        });
+        
+
+        
+        
+        ////////
         var seconds = 120;//game timer
         var riskSuccess = 0;
         
@@ -225,6 +269,12 @@ http://creativecommons.org/licenses/by/3.0/</p>
         //audio:
         
         //WHEN YOU ADD NEW MUSIC, ADD IT TO readjustVolume()!!!
+        var fxs_good = [new Audio("sound/good_1.wav"),new Audio("sound/good_2.wav")];
+        var fxs_bad = [new Audio("sound/bad_1.wav"),new Audio("sound/bad_2.wav"),new Audio("sound/bad_3.wav")];
+        var fxs_upgrade = [new Audio("sound/upgrade_1.wav"),new Audio("sound/upgrade_2.wav")];
+        var fx_exclaim = [new Audio("sound/exclaim_1.wav"),new Audio("sound/exclaim_2.wav"),new Audio("sound/exclaim_3.wav"),new Audio("sound/exclaim_4.wav"),new Audio("sound/exclaim_5.wav"),new Audio("sound/exclaim_6.wav"),new Audio("sound/exclaim_7.wav")];
+        var fxs_money_loss = [new Audio("sound/bad_amount_1.wav"),new Audio("sound/bad_amount_2.wav"),new Audio("sound/bad_amount_3.wav")];
+        
         var music;
         var choice = Math.floor(Math.random()*7);
         console.log("music choice: " + choice);
@@ -234,11 +284,7 @@ http://creativecommons.org/licenses/by/3.0/</p>
             music = new Audio("sound/Rollinat5elec.mp3");
         }
         music.play();
-        var fxs_good = [new Audio("sound/good_1.wav"),new Audio("sound/good_2.wav")];
-        var fxs_bad = [new Audio("sound/bad_1.wav"),new Audio("sound/bad_2.wav"),new Audio("sound/bad_3.wav")];
-        var fxs_upgrade = [new Audio("sound/upgrade_1.wav"),new Audio("sound/upgrade_2.wav")];
-        var fx_exclaim = [new Audio("sound/exclaim_1.wav"),new Audio("sound/exclaim_2.wav"),new Audio("sound/exclaim_3.wav"),new Audio("sound/exclaim_4.wav"),new Audio("sound/exclaim_5.wav"),new Audio("sound/exclaim_6.wav"),new Audio("sound/exclaim_7.wav")];
-        var fxs_money_loss = [new Audio("sound/bad_amount_1.wav"),new Audio("sound/bad_amount_2.wav"),new Audio("sound/bad_amount_3.wav")];
+        
         function play_rand_sound(sound_list){
             var rand = sound_list[Math.floor(Math.random() * sound_list.length)];
             play_sound(rand);
