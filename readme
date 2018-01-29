@@ -1,0 +1,8 @@
+# Production
+1. Run `npm run build`.  Copy all the files in 
+dist/ to wherever you want to serve the game.
+2. Change the `manifest` line in index.html to 
+`<link rel="manifest" href="./manifest.json">`.
+You must do this because Parcel will not leave
+it as a JSON file.
+3. Copy over `manifest.json`, `service-worker.js`, and `sound/`

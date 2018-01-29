@@ -1,0 +1,25 @@
+{
+  "name": "riskit",
+  "version": "1.0.0",
+  "description": "A game of double or nothing",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html --public-url ./",
+    "build": "parcel build index.html --public-url ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdoleary/RiskIt.git"
+  },
+  "author": "Jordan O'Leary",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jdoleary/RiskIt/issues"
+  },
+  "homepage": "https://github.com/jdoleary/RiskIt#readme",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "node-sass": "^4.7.2"
+  }
+}

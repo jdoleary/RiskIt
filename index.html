@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="manifest" href="./manifest.json">
+    </head>
+<body>
+  <script src="./index.js"></script>
+  <img id="unmuted" src="images/volume_up.png" style="position: absolute; right:10px; top: 10px;" width="32" height="32" onclick=mute();></img>
+    <img id="muted" src="images/mute.png" style="display:none; position: absolute; right:10px; top: 10px;" width="32" height="32" onclick=unmute();></img>
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="#"></a></li>
+            <li role="presentation"><a href="#"></a></li>
+            <li role="presentation"><a href="#"></a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted"></h3>
+      </div>
+
+      <div class="jumbotron">
+        <h1 id="money" style="font-family: Arial, Helvetica, sans-serif;"></h1>
+        
+        <span id="countdown" class="timer"></span>
+        <p id="stats"></p>
+        <div id="riskit" class="btn">Risk It!</div>
+        <p id="btn_risk_holder"><a id="btn_risk" class="btn btn-7 btn-2d btn-7h" href="#" role="button">Risk It!</a></p>
+        <p id="btn_upgrade"><a class="btn btn-7 btn-7h" href="#" role="button">Upgrade Income</a></p>
+      </div>
+        <div class="total_centered avoid-clicks"><div id="animationSandbox" style="opacity:0;"><span>Flashy Multiplier</span></div></div>
+      <p>Music: "Rollin at 5" Kevin MacLeod (incompetech.com) 
+Licensed under Creative Commons: By Attribution 3.0
+http://creativecommons.org/licenses/by/3.0/</p>
+</body>
+<script>
+  if ('serviceWorker' in navigator) {
+    console.log("Will the service worker register?");
+    navigator.serviceWorker.register('service-worker.js')
+      .then(function(reg){
+        console.log("Yes, it did.");
+      }).catch(function(err) {
+        console.log("No it didn't. This happened: ", err)
+      });
+  }
+</script>
+</html>
