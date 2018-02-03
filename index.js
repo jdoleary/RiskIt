@@ -36,7 +36,8 @@ $(()=>{
         upgrade: $('#btn__upgrade'),
         restart: $('#btn__restart'),
         time: $('#time'),
-        money: $('#money')
+        money: $('#money'),
+        finalScore: $('#final_score')
     }
 
     const colors = {
@@ -47,7 +48,7 @@ $(()=>{
         
     const riskit = () => {
         var roll = Math.random();
-        console.log('roll: ' + roll);
+        // console.log('roll: ' + roll);
         if(roll<=game.chance){
             game.score*=2;
 
@@ -104,7 +105,23 @@ $(()=>{
         }else{
             ui.upgrade.addClass('disabled');
         }
-        ui.money.html(game.score);
+        if(game.score > 100000){
+            ui.money.addClass('small-1')
+        }
+        if(game.score > 1000000){
+            ui.money.addClass('small-2')
+        }
+        if(game.score > 10000000){
+            ui.money.addClass('small-3')
+        }
+        if(game.score > 1000000000){
+            ui.money.addClass('small-4')
+        }
+        if(game.score < 100000){
+            ui.money.removeClass('small-1 small-2 small-3 small-4')
+        }
+        ui.money.html(numberWithCommas(game.score));
+        ui.finalScore.html(numberWithCommas(game.score));
         
     }
     function upgradeIncome(){
@@ -113,7 +130,7 @@ $(()=>{
             game.score -= game.upgradeIncomeCost;
             game.income *= 2;
             game.upgradeIncomeCost = game.income * 60;
-            ui.upgrade.text('upgrade income: ' + game.upgradeIncomeCost);
+            ui.upgrade.text('upgrade income: ' + numberWithCommas(game.upgradeIncomeCost));
         }
         
     }
@@ -124,19 +141,23 @@ $(()=>{
     }
     function secondPassed() {
         ui.time.html(formatTime(game.time));
+        if(game.time <= 10){
+            blink(ui.time,colors.red,colors.black);
+        }
         if (game.time == 0) {
             clearInterval(countdownTimer);
             gameOver();
         } else {
             game.time--;
-        }
-    
+        }    
     }
     
-
+    const numberWithCommas = (x) => {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     function showMultiplier(i){
-        console.log('multiplier ',i);
+        //console.log('multiplier ',i);
     }
 
     function restart(){

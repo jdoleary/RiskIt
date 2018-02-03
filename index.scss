@@ -5,12 +5,25 @@ $margin: 200px;
     max-width:600px;
     margin:0 auto;
 }
-#money{
+#money,#final_score{
     text-align:center;
     font-size:5em;
+    &.small-1{
+        font-size:4.5em;
+    }
+    &.small-2{
+        font-size:4em;
+    }
+    &.small-3{
+        font-size:3.5em;
+    }
+    &.small-4{
+        font-size:3em;
+    }
 }
 #time{
     text-align:center;
+    font-size:1.5em;
 
 }
 .btn{
