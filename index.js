@@ -84,7 +84,11 @@ $(()=>{
                 play_sound('fxs_score_loss',0);
             
             }
-            game.score = 0;
+
+            // Delayed score loss for extra sadness
+            setTimeout(()=>{
+                game.score = 0;
+            },200);
             
             stats.riskFailure++;
             stats.risksInRow = 0;
