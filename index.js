@@ -3,15 +3,15 @@ import $ from 'jquery';
 
 import { formatTime } from './js/ui';
 import { play_sound, play_rand_sound } from './js/sound';
+import { blink } from './js/animate';
 
 $(()=>{
+
     const defaultGameSettings = {
         time:120,
         score: 60,
         income: 1,
         upgradeIncomeCost: 60,
-        upgradeAffordable: false,
-        successiveSuccessfulRisks:0,
         // Chance of successful risk
         chance: 0.6
     };
@@ -38,12 +38,20 @@ $(()=>{
         time: $('#time'),
         money: $('#money')
     }
-    
+
+    const colors = {
+        green: '#0f0',
+        red:'#f00',
+        black:'#000'
+    }
+        
     const riskit = () => {
         var roll = Math.random();
         console.log('roll: ' + roll);
         if(roll<=game.chance){
             game.score*=2;
+
+            blink(ui.money,colors.green,colors.black);
             
             stats.riskSuccess++;
             stats.risksInRow++;
@@ -64,6 +72,8 @@ $(()=>{
             
             
         }else{
+            blink(ui.money,colors.red,colors.black);
+
             //Fail riskit
             if(game.score >= 100000){
                 play_sound('fxs_score_loss',2);
@@ -89,6 +99,11 @@ $(()=>{
     }
     function getIncome(){
         game.score += game.income;
+        if(game.score >= game.upgradeIncomeCost){
+            ui.upgrade.removeClass('disabled');
+        }else{
+            ui.upgrade.addClass('disabled');
+        }
         ui.money.html(game.score);
         
     }
@@ -125,6 +140,7 @@ $(()=>{
     }
 
     function restart(){
+        play_sound('music');
         ui.container.removeClass('gameOver');
         game = Object.assign({},defaultGameSettings);
         getIncome();
@@ -134,7 +150,6 @@ $(()=>{
     }
 
     (function initGame(){
-        //play_sound('music');
         ui.riskit.click(riskit.bind(this));
         ui.upgrade.click(upgradeIncome.bind(this));
         ui.restart.click(()=>{

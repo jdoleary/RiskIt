@@ -31,14 +31,9 @@ const sounds = {
     fxs_upgrade: [new Howl({src:[upgrade_1]}),new Howl({src:[upgrade_2]})],
     fx_exclaim: [new Howl({src:[exclaim_1]}),new Howl({src:[exclaim_2]}),new Howl({src:[exclaim_3]}),new Howl({src:[exclaim_4]}),new Howl({src:[exclaim_5]}),new Howl({src:[exclaim_6]}),new Howl({src:[exclaim_7]})],
     fxs_score_loss: [new Howl({src:[bad_amount_1]}),new Howl({src:[bad_amount_2]}),new Howl({src:[bad_amount_3]})],
-    //music: [new Howl({src:[music]})]
+    music: [new Howl({src:[music]})]
 }
 
-// const music2 = new Howl({src:[music]});
-// music2.once('load',()=>{
-//     console.log('loaded');
-//     music2.play();
-// })
 let volume_master = 1.0;
 export function changeVolume(clip,newVolume){
     clip.volume = newVolume*volume_master;
@@ -59,7 +54,6 @@ export function mute(){
     readjustVolumes(0.0);
 }
 export function unmute(){
-    console.log('unmute'); 
     $('#unmuted').show();
     $('#muted').hide();
     readjustVolumes(1.0);

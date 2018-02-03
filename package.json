@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/jdoleary/RiskIt#readme",
   "dependencies": {
+    "gsap": "^1.20.3",
     "howler": "^2.0.8",
     "jquery": "^3.3.1",
     "node-sass": "^4.7.2"
