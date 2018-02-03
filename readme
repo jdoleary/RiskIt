@@ -5,4 +5,4 @@ dist/ to wherever you want to serve the game.
 `<link rel="manifest" href="./manifest.json">`.
 You must do this because Parcel will not leave
 it as a JSON file.
-3. Copy over `manifest.json`, `service-worker.js`, and `sound/`
+3. Copy over `manifest.json`, `service-worker.js`

@@ -120,8 +120,7 @@ $(()=>{
         if(game.score < 100000){
             ui.money.removeClass('small-1 small-2 small-3 small-4')
         }
-        ui.money.html(numberWithCommas(game.score));
-        ui.finalScore.html(numberWithCommas(game.score));
+        updateUI();
         
     }
     function upgradeIncome(){
@@ -130,7 +129,7 @@ $(()=>{
             game.score -= game.upgradeIncomeCost;
             game.income *= 2;
             game.upgradeIncomeCost = game.income * 60;
-            ui.upgrade.text('upgrade income: ' + numberWithCommas(game.upgradeIncomeCost));
+            updateUI();
         }
         
     }
@@ -140,7 +139,7 @@ $(()=>{
         
     }
     function secondPassed() {
-        ui.time.html(formatTime(game.time));
+        updateUI();
         if(game.time <= 10){
             blink(ui.time,colors.red,colors.black);
         }
@@ -164,10 +163,16 @@ $(()=>{
         play_sound('music');
         ui.container.removeClass('gameOver');
         game = Object.assign({},defaultGameSettings);
-        getIncome();
-        secondPassed();
         income_interval = setInterval(getIncome, music_bps);
         countdownTimer = setInterval(secondPassed, 1000);
+        updateUI();
+    }
+
+    function updateUI(){        
+        ui.money.html(numberWithCommas(game.score));
+        ui.finalScore.html(numberWithCommas(game.score));
+        ui.time.html(formatTime(game.time));
+        ui.upgrade.text('upgrade income: ' + numberWithCommas(game.upgradeIncomeCost));
     }
 
     (function initGame(){
