@@ -5,17 +5,17 @@ import { formatTime } from './js/ui';
 import { play_sound, play_rand_sound } from './js/sound';
 
 $(()=>{
-    const game = {
+    const defaultGameSettings = {
         time:120,
         score: 60,
         income: 1,
         upgradeIncomeCost: 60,
         upgradeAffordable: false,
-        isGameOver: false,
         successiveSuccessfulRisks:0,
         // Chance of successful risk
         chance: 0.6
     };
+    let game = {};
 
     const stats = {
         riskSuccess: 0,
@@ -23,11 +23,18 @@ $(()=>{
         risksInRow: 0,
         riskStreak: 0
     }
+    
+    var music_bpm = 210;
+    var music_bps = 1000/(music_bpm/60);//interval timer
+    var income_interval;
+    var countdownTimer;
 
     // Jquery refs
     const ui = {
+        container:$('.container'),
         riskit: $('#btn__riskit'),
         upgrade: $('#btn__upgrade'),
+        restart: $('#btn__restart'),
         time: $('#time'),
         money: $('#money')
     }
@@ -95,12 +102,8 @@ $(()=>{
         }
         
     }
-    var music_bpm = 210;
-    var music_bps = 1000/(music_bpm/60);//interval timer
-    var income_interval = setInterval(function(){ getIncome(); }, music_bps);
     function gameOver(){
-        ui.riskit.hide();
-        ui.upgrade.hide();
+        ui.container.addClass('gameOver');
         clearInterval(income_interval);
         
     }
@@ -115,17 +118,30 @@ $(()=>{
     
     }
     
-    var countdownTimer = setInterval(secondPassed, 1000);
 
 
     function showMultiplier(i){
         console.log('multiplier ',i);
     }
 
+    function restart(){
+        ui.container.removeClass('gameOver');
+        game = Object.assign({},defaultGameSettings);
+        getIncome();
+        secondPassed();
+        income_interval = setInterval(getIncome, music_bps);
+        countdownTimer = setInterval(secondPassed, 1000);
+    }
+
     (function initGame(){
-        play_sound('music');
+        //play_sound('music');
         ui.riskit.click(riskit.bind(this));
         ui.upgrade.click(upgradeIncome.bind(this));
+        ui.restart.click(()=>{
+            play_sound('fx_exclaim',1);
+            restart();
+        });
+        gameOver();
 
     })();
 

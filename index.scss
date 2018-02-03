@@ -3,8 +3,8 @@ $height: $unit*10;
 $margin: 200px;
 .container{
     max-width:600px;
+    max-height:1000px;
     margin:0 auto;
-    padding:$margin 0;
 }
 #money{
     text-align:center;
@@ -22,8 +22,27 @@ $margin: 200px;
     line-height:$height;
     border-radius:10px;
 }
-#btn__riskit,#btn__upgrade{
+#btn__holder{
+    position:fixed;
+    left:0;
+    bottom:0;
+    width:100%;
+}
+.btn{
     background-color:green;
+}
+#btn__restart,#credits{
+    display:none;
+}
+
+.gameOver{
+    #btn__riskit,#btn__upgrade{
+        display:none;
+    }
+    #credits,#btn__restart{
+        display:block;
+    }
+    
 }
 
 *{

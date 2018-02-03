@@ -2,21 +2,24 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="manifest" href="./manifest.json">
     </head>
 <body>
   <script src="./index.js"></script>
-  <img id="unmuted" src="images/volume_up.png" style="position: absolute; right:10px; top: 10px;" width="32" height="32" onclick=mute();></img>
-  <img id="muted" src="images/mute.png" style="display:none; position: absolute; right:10px; top: 10px;" width="32" height="32" onclick=unmute();></img>
+  <img id="unmuted" src="images/volume_up.png" style="position: absolute; right:10px; top: 10px;" width="32" height="32"></img>
+  <img id="muted" src="images/mute.png" style="display:none; position: absolute; right:10px; top: 10px;" width="32" height="32"></img>
 
-  <div class="container">
+  <div class="container gameOver">
     <div id="money">60</div>
     <div id="time">2:00</div>
-    <div id="btn__upgrade" class="btn upgrade_unavail">Upgrade</div>
-    <div id="btn__riskit" class="btn">Risk It!</div>
+    <div id="btn__holder">
+      <div id="btn__upgrade" class="btn upgrade_unavail">Upgrade</div>
+      <div id="btn__riskit" class="btn">Risk It!</div>
+      <div id="btn__restart" class="btn">Play!</div>
+    </div>
+    <p id="credits">Music: "Rollin at 5" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 http://creativecommons.org/licenses/by/3.0/</p>
   </div>
-  <p>Music: "Rollin at 5" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 http://creativecommons.org/licenses/by/3.0/</p>
 </body>
 <script>
   if ('serviceWorker' in navigator) {

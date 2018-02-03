@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import _ from 'lodash';
+import { Howler, Howl } from 'howler';
+
 import good_1 from '../sound/good_1.wav';
 import good_2 from '../sound/good_2.wav';
 
@@ -25,14 +26,19 @@ import bad_amount_3 from '../sound/bad_amount_3.wav';
 import music from '../sound/Rollinat5.mp3';
 
 const sounds = {
-    fxs_good: [new Audio(good_1),new Audio(good_2)],
-    fxs_bad: [new Audio(bad_1),new Audio(bad_2),new Audio(bad_3)],
-    fxs_upgrade: [new Audio(upgrade_1),new Audio(upgrade_2)],
-    fx_exclaim: [new Audio(exclaim_1),new Audio(exclaim_2),new Audio(exclaim_3),new Audio(exclaim_4),new Audio(exclaim_5),new Audio(exclaim_6),new Audio(exclaim_7)],
-    fxs_score_loss: [new Audio(bad_amount_1),new Audio(bad_amount_2),new Audio(bad_amount_3)],
-    music: [new Audio(music)]
+    fxs_good: [new Howl({src:[good_1]}),new Howl({src:[good_2]})],
+    fxs_bad: [new Howl({src:[bad_1]}),new Howl({src:[bad_2]}),new Howl({src:[bad_3]})],
+    fxs_upgrade: [new Howl({src:[upgrade_1]}),new Howl({src:[upgrade_2]})],
+    fx_exclaim: [new Howl({src:[exclaim_1]}),new Howl({src:[exclaim_2]}),new Howl({src:[exclaim_3]}),new Howl({src:[exclaim_4]}),new Howl({src:[exclaim_5]}),new Howl({src:[exclaim_6]}),new Howl({src:[exclaim_7]})],
+    fxs_score_loss: [new Howl({src:[bad_amount_1]}),new Howl({src:[bad_amount_2]}),new Howl({src:[bad_amount_3]})],
+    //music: [new Howl({src:[music]})]
 }
 
+// const music2 = new Howl({src:[music]});
+// music2.once('load',()=>{
+//     console.log('loaded');
+//     music2.play();
+// })
 let volume_master = 1.0;
 export function changeVolume(clip,newVolume){
     clip.volume = newVolume*volume_master;
@@ -44,9 +50,6 @@ export function play_rand_sound(soundKey){
 export function play_sound(soundKey,index = 0){
     if(sounds[soundKey] && index < sounds[soundKey].length){
         let sound = sounds[soundKey][index];
-        //chrome / firefox discrepancy:
-        console.log('play sound ', sound);
-        if (window.chrome && sound.load) sound.load();
         sound.play();
     }
 }
@@ -56,13 +59,16 @@ export function mute(){
     readjustVolumes(0.0);
 }
 export function unmute(){
+    console.log('unmute'); 
     $('#unmuted').show();
     $('#muted').hide();
     readjustVolumes(1.0);
 }
 export function readjustVolumes(newVolume){
-    const allSounds = _.flatten(_.values(sounds))
-    for(let sound in allSounds){
-        changeVolume(sound,newVolume);
-    }
+    Howler.volume(newVolume);
 }
+
+$(()=>{
+    $('#muted').click(unmute);
+    $('#unmuted').click(mute);
+})
