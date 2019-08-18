@@ -4,6 +4,7 @@ import $ from 'jquery';
 import { formatTime } from './js/ui';
 import { play_sound, play_rand_sound } from './js/sound';
 import { blink } from './js/animate';
+import {startGraph, addY} from './js/graph';
 
 $(()=>{
 
@@ -13,7 +14,8 @@ $(()=>{
         income: 1,
         upgradeIncomeCost: 60,
         // Chance of successful risk
-        chance: 0.6
+        // chance: 0.6
+        chance: 0.9
     };
     let game = {};
 
@@ -164,6 +166,7 @@ $(()=>{
     }
 
     function restart(){
+        startGraph()
         play_sound('music');
         ui.container.removeClass('gameOver');
         game = Object.assign({},defaultGameSettings);
@@ -172,7 +175,8 @@ $(()=>{
         updateUI();
     }
 
-    function updateUI(){        
+    function updateUI(){  
+        addY(game.score)      
         ui.money.html(numberWithCommas(game.score));
         ui.finalScore.html(numberWithCommas(game.score));
         ui.time.html(formatTime(game.time));

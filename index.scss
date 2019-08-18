@@ -44,6 +44,7 @@ $margin: 200px;
     width:100%;
 }
 .btn{
+    cursor:pointer;
     background-color:green;
     &.disabled{
         background-color:grey;
