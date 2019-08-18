@@ -6,7 +6,6 @@
         <link rel="manifest" href="./manifest.json">
     </head>
 <body>
-  <script src="./index.js"></script>
   <img id="unmuted" src="images/volume_up.png" style="position: absolute; right:10px; top: 10px;" width="32" height="32"></img>
   <img id="muted" src="images/mute.png" style="display:none; position: absolute; right:10px; top: 10px;" width="32" height="32"></img>
 
@@ -21,6 +20,7 @@
       <div id="btn__riskit" class="btn screen--play">Risk It!</div>
       <div id="btn__restart" class="btn screen--gameOver">Play!</div>
     </div>
+    <div id="react-root"></div>
     <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
       <polyline id="poly" points="0,0" fill="none" stroke="black"/>
 
@@ -28,6 +28,7 @@
     <p id="credits" class="screen--gameOver font-reg">Music: "Rollin at 5" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 http://creativecommons.org/licenses/by/3.0/</p>
   </div>
 </body>
+  <script src="./index.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     console.log("Will the service worker register?");

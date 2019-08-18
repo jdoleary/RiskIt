@@ -1,5 +1,13 @@
 import './index.scss';
 import $ from 'jquery';
+import ReactDOM from 'react-dom';
+import chart from './js/chart.jsx';
+
+ReactDOM.render(
+    chart(),
+    document.getElementById('react-root')
+
+)
 
 import { formatTime } from './js/ui';
 import { play_sound, play_rand_sound } from './js/sound';

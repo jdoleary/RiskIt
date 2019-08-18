@@ -26,7 +26,7 @@ function add(y){
   ps.push({x,y})
 }
 const MAX_POINTS = 100 
-const speed = 0.3
+const speed = 0.1
 let lastTime;
 const svgHeight = 100
 let scope = 1
@@ -45,7 +45,9 @@ export function startGraph() {
 }
 export function addY(y){
     // graph is 200 by 100.  bottom is 100
-    scope = Math.ceil(y / svgHeight)
+    if(y / svgHeight > scope){
+      scope = Math.ceil(y / svgHeight)
+    }
     console.log("TCL: addY -> scope", scope)
     add(y)
 }
