@@ -45,9 +45,16 @@ $margin: 200px;
 }
 .btn{
     cursor:pointer;
-    background-color:green;
+    background-color:#00aa00;
     &.disabled{
         background-color:grey;
+        &:active {
+            background-color:grey;
+
+        }
+    }
+    &:active {
+        background-color:green;
     }
 }
 .screen--gameOver{

@@ -1,10 +1,10 @@
 import './index.scss';
 import $ from 'jquery';
 import ReactDOM from 'react-dom';
-import chart from './js/chart.jsx';
+import main from './js/index.jsx';
 
 ReactDOM.render(
-    chart(),
+    main(),
     document.getElementById('react-root')
 
 )
@@ -12,7 +12,6 @@ ReactDOM.render(
 import { formatTime } from './js/ui';
 import { play_sound, play_rand_sound } from './js/sound';
 import { blink } from './js/animate';
-import {startGraph, addY} from './js/graph';
 
 $(()=>{
 
@@ -33,7 +32,7 @@ $(()=>{
         risksInRow: 0,
         riskStreak: 0
     }
-    
+   
     var music_bpm = 210;
     var music_bps = 1000/(music_bpm/60);//interval timer
     var income_interval;
@@ -174,7 +173,6 @@ $(()=>{
     }
 
     function restart(){
-        startGraph()
         play_sound('music');
         ui.container.removeClass('gameOver');
         game = Object.assign({},defaultGameSettings);
@@ -184,7 +182,6 @@ $(()=>{
     }
 
     function updateUI(){  
-        addY(game.score)      
         ui.money.html(numberWithCommas(game.score));
         ui.finalScore.html(numberWithCommas(game.score));
         ui.time.html(formatTime(game.time));
