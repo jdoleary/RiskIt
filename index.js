@@ -1,4 +1,3 @@
-import './index.scss';
 import $ from 'jquery';
 
 import { formatTime } from './js/ui';

@@ -1,0 +1,78 @@
+
+.container{
+    max-width:600px;
+    margin:0 auto;
+}
+#money,#final_score{
+    text-align:center;
+    font-size:5em;
+}
+    #money,#final_score.small-1{
+        font-size:4.5em;
+    }
+    #money,#final_score.small-2{
+        font-size:4em;
+    }
+    #money,#final_score.small-3{
+        font-size:3.5em;
+    }
+    #money,#final_score.small-4{
+        font-size:3em;
+    }
+#time{
+    text-align:center;
+    font-size:1.5em;
+
+}
+.btn{
+    width:90%;
+    height:16px;
+    margin:8px auto;
+    text-align:center;
+    line-height:16px;
+    border-radius:10px;
+}
+#btn__holder{
+    
+    @media (max-width: 780px) { 
+        position:fixed;
+        left:0;
+        bottom:0;
+    }
+    width:100%;
+}
+.btn{
+    background-color:green;
+}
+    .btn.disabled{
+        background-color:grey;
+    }
+.screen--gameOver{
+    display:none;
+}
+
+#title{
+    text-align:center;
+}
+
+.gameOver .screen--play{
+        display:none;
+    }
+.gameOver .screen--gameOver{
+        display:block;
+    }
+    
+
+*{
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+    font-family: 'Titan One', cursive;
+}
+.font-reg{
+    font-family:Arial, Helvetica, sans-serif;
+}
